@@ -1,0 +1,343 @@
+//Create:
+
+window_set_size(1280,720);
+
+username = "";
+banana = 0;
+laranja = 0;
+
+spd=4;
+hspd=0;
+vspd=0;
+
+key_up=0;
+key_down=0;
+key_right=0;
+key_left=0;
+
+place1 = 0;
+place2 = 0;
+place3 = 0;
+place4 = 0;
+place5 = 0;
+place6 = 0;
+
+
+card = 0;
+card1 = 0;
+card2 = 0;
+card3 = 0;
+card4 = 0;
+card5 = 0;
+
+depth = -y
+
+//Step:
+
+//X e Y se referem a variáveis ja presentes que são os planos cartesianos no mapa.
+//Se a tecla W for pressionada:
+key_up = keyboard_check(ord("W"));
+
+//Se a tecla S for pressionada:
+key_down = keyboard_check(ord("S"));
+
+//Se a tecla A for pressionada:
+key_left = keyboard_check(ord("A")); 
+
+//Se a tecla D for pressionada:
+key_right =keyboard_check(ord("D"));
+
+//Variáveis velocidade horizontal e vertical:
+if key_right
+{
+    hspd = spd
+}
+else if key_left
+{
+    hspd = -spd
+}
+else
+{
+    hspd = 0
+}
+
+if key_down
+{
+    vspd = spd
+}
+else if key_up
+{
+    vspd = -spd
+}
+else
+{
+    vspd = 0
+}
+
+#region Collision
+//Colisão Horizontal:
+var _col = instance_place(x + hspd, y, oWall)
+//Se houver colisão com a parede:
+if (_col)
+{
+	//Se estou indo para direita, grudo na esquerda da parede, corrigindo a bbox do player:
+	if (hspd > 0)
+	{
+	x = _col.bbox_left + (x - bbox_right);
+	}
+	//Se estou indo para esquerda, grudo na direita da parede, corrigindo a bbox do player:
+	if (hspd < 0)
+	{
+	x = _col.bbox_right + (x - bbox_left);
+	}
+	//Zero a velocidade horizontal:
+	hspd = 0
+}
+//Colisão vertical:
+var _col = instance_place(x, y + vspd, oWall)
+//Se houver colisão com a parede:
+if (_col)
+{
+	//Se estou indo para cima, grudo na baixa da parede, corrigindo a bbox do player:
+	if (vspd > 0)
+	{
+	y = _col.bbox_top + (y - bbox_bottom);
+	}
+	//Se estou indo para baixo, grudo na cima da parede, corrigindo a bbox do player:
+	if (vspd < 0)
+	{
+	y = _col.bbox_bottom + (y - bbox_top);
+	}
+	//Zero a velocidade vertical:
+	vspd = 0
+}
+#endregion
+
+//Movendo eixo x:
+x += hspd;
+//Movendo eixo y:
+y += vspd;
+
+if	(!place_meeting(x,y,Casa1)) 
+{
+	place1 = 0
+}
+
+if	(!place_meeting(x,y,Casa2))
+{
+	place2 = 0
+}
+
+if	(!place_meeting(x,y,Casa3))
+{
+	place3 = 0
+}
+
+if	(!place_meeting(x,y,Obj_Retorno))
+{
+	place4 = 0
+}
+
+if	(!place_meeting(x,y,Obj_Retorno2))
+{
+	place5 = 0
+}
+
+if	(!place_meeting(x,y,Obj_MiniGame))
+{
+	place6 = 0
+}
+
+
+if	(!place_meeting(x,y,Obj_Boss))
+{
+	card = 0
+}
+
+if	(!place_meeting(x,y,oPerk_Event))
+{
+	card1 = 0
+}
+
+if	(!place_meeting(x,y,oPerk_Event2))
+{
+	card2 = 0
+}
+
+if	(!place_meeting(x,y,oPerk_Event3))
+{
+	card3 = 0
+}
+
+if	(!place_meeting(x,y,Obj_Boss2))
+{
+	card4 = 0
+}
+
+if	(!place_meeting(x,y,Obj_Boss3))
+{
+	card5 = 0
+}
+
+if (banana = 7)
+{
+	room_goto(RoomGame2)
+		
+}
+
+if (laranja = 10)
+{
+	instance_destroy()
+	room_goto(Tabuleiro_cl)
+	
+}
+
+//Alarm 0:
+
+instance_destroy(Obj_Boss_Sprite)
+instance_destroy(Obj_Boss_Sprite2)
+instance_destroy(Obj_Boss_Sprite3)
+instance_destroy(Obj_Perks)
+
+card = 1
+card1 = 1
+card2 = 1
+card3 = 1
+card4 = 1
+card5 = 1
+
+//Draw: 
+
+draw_self();
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+draw_set_color(c_white);
+draw_text(x,y-74,username);
+
+//Global Right Pressed:
+
+buffer_seek(obj_client.client_buffer,buffer_seek_start,0);
+buffer_write(obj_client.client_buffer,buffer_u8,network.move);
+buffer_write(obj_client.client_buffer,buffer_s16,mouse_x);
+buffer_write(obj_client.client_buffer,buffer_s16,mouse_y);
+network_send_packet(obj_client.client,obj_client.client_buffer,buffer_tell(obj_client.client_buffer));
+
+//Col Casa1:
+
+if place1 = 0 
+{ 
+	place1 = 1;
+}
+
+//Col Casa2:
+
+if place2 = 0 
+{ 
+	place2 = 1;
+}
+
+//Col Casa3:
+
+if place3 = 0 
+{ 
+	place3 = 1;
+}
+
+//Col Obj_Boss:
+
+if card = 0 
+{ 
+	card = 1;
+	instance_create_depth(485,320,0,Obj_Boss_Sprite)
+	alarm[0] = 500
+}
+
+//Col Obj_Boss2:
+
+if card4 = 0 
+{ 
+	card4 = 1;
+	instance_create_depth(485,320,0,Obj_Boss_Sprite2)
+	alarm[0] = 500
+}
+
+//Col Obj_Boss3:
+
+if card5 = 0 
+{ 
+	card5 = 1;
+	instance_create_depth(485,320,0,Obj_Boss_Sprite3)
+	alarm[0] = 500
+}
+
+//Col Obj_MiniGame:
+
+if place6 = 0 
+{ 
+	place6 = 1;
+	show_message("Execute MiniJogo.exe")
+}
+
+//Col Obj_Retorno:
+
+x = 615;
+y = 340;
+
+
+if place4 = 0 
+{ 
+	place4 = 1;
+}
+
+//Col Obj_Retorno2:
+
+x = 550;
+y = 185;
+
+if place5 = 0 
+{ 
+	place5 = 1;
+}
+
+//Col oEnemy:
+
+instance_destroy()
+
+room_restart()
+
+//Col oIT1:
+
+banana+=1//Aumentar 1 na variável banana
+instance_destroy(other)//Destruir o outro que não o player na colisão
+
+//Col oIT2:
+
+laranja+=1//Aumentar 1 na variável laranja
+instance_destroy(other)//Destruir o outro que não o player na colisão
+
+//Col oPerk_Event:
+
+if card1 = 0 
+{ 
+	card1 = 1;
+	instance_create_depth(485,320,0,Obj_Perks)
+	alarm[0] = 500
+}
+
+//Col oPerk_Event2:
+
+if card2 = 0 
+{ 
+	card2 = 1;
+	instance_create_depth(485,320,0,Obj_Perks)
+	alarm[0] = 500
+}
+
+//Col oPerk_Event3:
+
+if card3 = 0 
+{ 
+	card3 = 1;
+	instance_create_depth(485,320,0,Obj_Perks)
+	alarm[0] = 500
+}

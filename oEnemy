@@ -1,0 +1,24 @@
+//Create:
+
+//hsp = horizontal speed
+//vsp = vertical speed
+hsp = random_range(0,6)
+vsp = random_range(0,6)
+
+//Step:
+
+//x = horizontal e y = vertical
+x+=hsp
+y+=vsp
+
+//se o objeto ir para cordenada x negativa que sairia da tela ele deve se inverter
+if x<0 {hsp=-hsp} 
+
+//se o objeto ir para cordenada x maior que nossa sala que sairia da tela ele deve se inverter
+if x>room_width {hsp=-hsp} 
+
+//se o objeto ir para cordenada y negativa que sairia da tela ele deve se inverter
+if y<0 {vsp=-vsp} 
+
+//se o objeto ir para cordenada y maior que nossa sala que sairia da tela ele deve se inverter
+if y>room_height {vsp=-vsp} 

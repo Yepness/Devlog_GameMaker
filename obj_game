@@ -1,0 +1,2 @@
+//Create:
+username = get_string("Digite seu nome","");
